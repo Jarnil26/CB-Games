@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Register</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 350px;
+            text-align: center;
+            animation: slideIn 1s ease-out;
+        }
+
+        .container h2 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .container input {
+            width: 90%;
+            padding: 12px 20px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1em;
+            outline: none;
+        }
+
+        .container input::placeholder {
+            color: #ddd;
+        }
+
+        .container button {
+            margin-top: 15px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background: #4caf50;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .container button:hover {
+            background: #45a049;
+            transform: translateY(-3px);
+        }
+
+        .container button:active {
+            transform: translateY(1px);
+        }
+
+        .toggle {
+            display: block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #ddd;
+            transition: color 0.3s;
+        }
+
+        .toggle:hover {
+            color: white;
+        }
+
+        /* Keyframe animation */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message {
+            margin-top: 15px;
+            color: #ffdddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="auth-container">
+        <h2 id="form-title">Login</h2>
+        <form id="auth-form">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Submit</button>
+        </form>
+        <a href="#" class="toggle" id="toggle-link">Don't have an account? Register</a>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        const authContainer = document.getElementById('auth-container');
+        const formTitle = document.getElementById('form-title');
+        const authForm = document.getElementById('auth-form');
+        const toggleLink = document.getElementById('toggle-link');
+        const messageDiv = document.getElementById('message');
+
+        let isLogin = true;
+
+        const users = {
+            "admin": "1234",
+            "testuser": "password",
+            "guest": "guest123",
+            "jarnil":"jarnil26"
+        }; // Object to store registered users with default credentials
+
+        toggleLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            isLogin = !isLogin;
+            formTitle.textContent = isLogin ? 'Login' : 'Register';
+            toggleLink.textContent = isLogin ? "Don't have an account? Register" : 'Already have an account? Login';
+            messageDiv.textContent = '';
+        });
+
+        authForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (isLogin) {
+                // Login logic
+                if (users[username] && users[username] === password) {
+                    messageDiv.textContent = 'Login successful!';
+                    messageDiv.style.color = '#ddffdd';
+                    setTimeout(() => {
+                        window.location.href = 'home.html'; // Redirect to home page
+                    }, 1000);
+                } else {
+                    messageDiv.textContent = 'Invalid username or password!';
+                    messageDiv.style.color = '#ffdddd';
+                }
+            } else {
+                // Register logic
+                if (users[username]) {
+                    messageDiv.textContent = 'Username already exists!';
+                    messageDiv.style.color = '#ffdddd';
+                } else {
+                    users[username] = password;
+                    messageDiv.textContent = 'Registration successful! Please login.';
+                    messageDiv.style.color = '#ddffdd';
+                    isLogin = true;
+                    formTitle.textContent = 'Login';
+                    toggleLink.textContent = "Don't have an account? Register";
+                }
+            }
+
+            authForm.reset();
+        });
+    </script>
+</body>
+
+</html>
